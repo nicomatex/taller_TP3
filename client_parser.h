@@ -12,6 +12,9 @@ class ClientParser {
    public:
     ClientParser();
     ~ClientParser();
+
+    /* Parsea una linea y devuelve el comando correspondiente
+    a la linea parseada. Siempre devuelve un comando valido.*/
     Command* operator()();
 };
 
