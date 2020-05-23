@@ -5,7 +5,7 @@
 #include <cstdint>
 
 class Socket{
-    private:
+    protected:
         int skt;
     public:
         Socket();

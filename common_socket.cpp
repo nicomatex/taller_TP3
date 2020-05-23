@@ -51,6 +51,8 @@ std::vector<uint8_t> Socket::recieve_message(size_t msgsize) {
     }
     if (!remote_socket_closed){
         buffer.resize(total_received);
+    }else{
+        buffer.resize(0);
     }
     
     return buffer;
