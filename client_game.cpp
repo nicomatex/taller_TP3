@@ -1,9 +1,11 @@
-#include <cstring>
+#include "client_game.h"
+
 #include <arpa/inet.h>
 
-#include "client_game.h"
-#include "common_error.h"
+#include <cstring>
+
 #include "client_config.h"
+#include "common_error.h"
 
 Game::Game(const char* host, const char* port) : client(host, port) {}
 
@@ -17,44 +19,45 @@ std::string Game::receive_response() {
         std::move(client.recieve_message(sizeof(uint16_t)));
 
     uint16_t res_size = 0;
-    memcpy(&res_size,&res_size_buffer[0],sizeof(uint16_t));
+    memcpy(&res_size, &res_size_buffer[0], sizeof(uint16_t));
 
     res_size = ntohs(res_size);
 
-    std::vector<uint8_t> res_buffer = std::move(client.recieve_message((size_t)res_size));
+    std::vector<uint8_t> res_buffer =
+        std::move(client.recieve_message((size_t)res_size));
     std::string response;
 
-    for(size_t i = 0;i < res_buffer.size(); i++){
+    for (size_t i = 0; i < res_buffer.size(); i++) {
         response.push_back((char)res_buffer[i]);
     }
 
     return response;
 }
 
-void Game::run(){
+void Game::run() {
     bool continue_running = true;
     std::string response;
-    while(continue_running){
-        try{
+    while (continue_running) {
+        try {
             send_command(parser());
             response = std::move(receive_response());
-            if (response == RESP_LOSE || response == RESP_WIN){
+            if (response == RESP_LOSE || response == RESP_WIN) {
                 continue_running = false;
             }
-            if (response.length() == 0){
+            if (response.length() == 0) {
                 std::cerr << MSG_ERR_CLOSED << std::endl;
                 continue_running = false;
-            }else{
+            } else {
                 std::cout << response << std::endl;
             }
-        }catch(Error &e){
+        } catch (Error& e) {
             std::cerr << e.what() << std::endl;
             continue_running = false;
-        }catch(...){
+        } catch (...) {
             std::cerr << MSG_ERR_UNKNOWN << std::endl;
             continue_running = false;
         }
     }
 }
 
-Game::~Game(){}
+Game::~Game() {}
