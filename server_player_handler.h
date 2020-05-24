@@ -9,6 +9,7 @@
 #include "server_parser.h"
 #include "server_statistics.h"
 #include "server_thread.h"
+#include "common_protocol.h"
 
 /* ------ Interfaz ---------*/
 class PlayerHandler : public Thread {
@@ -17,21 +18,14 @@ class PlayerHandler : public Thread {
     Socket peer;
     Statistics* stats;
     NumberParser* parser;
+    Protocol protocol;
+
     std::atomic_bool is_dead;
     /* Numero que debe adivinar el cliente. */
     const uint16_t guess_number;
 
     size_t tries_left;
     bool player_won;
-
-    /* Recibe un caracter a traves del socket. */
-    uint8_t _receive_command();
-
-    /* Recibe un entero no signado de 2 bytes a traves del socket. */
-    uint16_t _receive_int();
-
-    /* Envia una string a traves del socket. */
-    void _send_string(const std::string str);
 
     /* Handlers para los comandos. */
     void _handle_help();

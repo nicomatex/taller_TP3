@@ -3,6 +3,7 @@
 
 #include "server_config.h"
 #include "server_game.h"
+#include "common_network_error.h"
 
 int main(int argc, char* argv[]) {
     if (argc != ARGS_QTY) {
@@ -10,7 +11,13 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    GameServer server(argv[ARG_POS_PORT], argv[ARG_POS_NUMBERFILE]);
-    server.run();
+    try{
+        GameServer server(argv[ARG_POS_PORT], argv[ARG_POS_NUMBERFILE]);
+        server.run();
+    }catch(NetworkError &e){
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+        
     return 0;
 }

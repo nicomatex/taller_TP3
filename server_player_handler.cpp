@@ -1,7 +1,7 @@
 #include <cstring>
+#include <string>
 #include <utility>
 #include <vector>
-#include <string>
 
 #include "server_player_handler.h"
 #include "arpa/inet.h"
@@ -20,38 +20,6 @@ PlayerHandler::PlayerHandler(Socket peer, Statistics* stats,
       player_won(false) {}
 
 bool PlayerHandler::dead() { return is_dead; }
-
-void PlayerHandler::_send_string(const std::string str) {
-    uint16_t length = (uint16_t)str.length();
-    length = htons(length);  // Pasaje a big endian
-
-    std::vector<uint8_t> output_buffer;
-    output_buffer.resize(sizeof(uint16_t) + str.length());
-    memcpy(&output_buffer[0], &length, sizeof(uint16_t));
-    memcpy(&output_buffer[sizeof(uint16_t)], &str[0], str.length());
-
-    peer.send_message(output_buffer);
-}
-
-uint8_t PlayerHandler::_receive_command() {
-    std::vector<uint8_t> in_buffer = std::move(peer.recieve_message(1));
-    if (in_buffer.size() == 0) {
-        throw NetworkError(MSG_ERR_CLOSED);
-    }
-    uint8_t command = in_buffer[0];
-    return command;
-}
-
-uint16_t PlayerHandler::_receive_int() {
-    std::vector<uint8_t> in_buffer = std::move(peer.recieve_message(2));
-    if (in_buffer.size() == 0) {
-        throw NetworkError(MSG_ERR_CLOSED);
-    }
-    uint16_t number = 0;
-    memcpy(&number, &in_buffer[0], sizeof(uint16_t));
-    number = ntohs(number);  // Pasaje a little endian
-    return number;
-}
 
 std::string PlayerHandler::_get_hints(uint16_t number) {
     unsigned int n_right = 0;
@@ -83,47 +51,47 @@ std::string PlayerHandler::_get_hints(uint16_t number) {
     return hints;
 }
 
-void PlayerHandler::_handle_help() { _send_string(MSG_HELP); }
+void PlayerHandler::_handle_help() { protocol.send_string(peer, MSG_HELP); }
 
 void PlayerHandler::_handle_surrender() {
-    _send_string(MSG_LOSE);
+    protocol.send_string(peer, MSG_LOSE);
     stop();
 }
 
 void PlayerHandler::_handle_number() {
-    uint16_t number = _receive_int();
+    uint16_t number = protocol.receive_int(peer);
 
     /* Chequeo de validez del numero */
     if (!parser->is_within_range(number) ||
         parser->has_repeated_digits(std::to_string((int)number))) {
         tries_left--;
         if (tries_left == 0) {
-            _send_string(MSG_LOSE);
+            protocol.send_string(peer, MSG_LOSE);
         } else {
-            _send_string(MSG_WRONG_NUMBER);
+            protocol.send_string(peer, MSG_WRONG_NUMBER);
         }
         return;
     }
 
     /* Chequeo de que haya adivinado el numero. */
     if (number == guess_number) {
-        _send_string(MSG_WIN);
+        protocol.send_string(peer, MSG_WIN);
         player_won = true;
         return;
     }
 
     tries_left--;
     if (tries_left == 0) {
-        _send_string(MSG_LOSE);
+        protocol.send_string(peer, MSG_LOSE);
     } else {
-        _send_string(_get_hints(number));
+        protocol.send_string(peer, _get_hints(number));
     }
 }
 
 void PlayerHandler::run() {
     while (!player_won && tries_left > 0 && !is_dead) {
         try {
-            uint8_t command = _receive_command();
+            uint8_t command = protocol.receive_char(peer);
 
             switch (command) {
                 case SERIAL_CHAR_HELP:

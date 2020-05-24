@@ -16,9 +16,6 @@ class Game {
     Protocol protocol;
 
    public:
-    /* Recibe una respuesta del servidor. */
-    std::string receive_response();
-
     /* Envia un comando al servidor. */
     void send_command(Command* command);
 

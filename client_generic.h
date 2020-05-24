@@ -35,7 +35,7 @@ class Client {
     std::vector<uint8_t> recieve_message(size_t msgsize);
 
     /* Devuelve un puntero al socket*/
-    Socket* get_socket();
+    Socket& get_socket();
 
     /* Anulada la construccion por copia. */
     Client(const Client& other) = delete;

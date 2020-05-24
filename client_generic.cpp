@@ -33,13 +33,10 @@ void Client::_connect(struct addrinfo* result) {
          current = current->ai_next) {
         tmp_skt = socket(current->ai_family, current->ai_socktype,
                          current->ai_protocol);
-        if (tmp_skt == -1) {
-            std::cerr << "Error: " << strerror(errno) << std::endl;
-        } else {
+        if (tmp_skt != -1) {
             socket_state =
                 connect(tmp_skt, current->ai_addr, current->ai_addrlen);
             if (socket_state == -1) {
-                std::cerr << "Error: " << strerror(errno) << std::endl;
                 close(tmp_skt);
             }
             is_connected = (socket_state != -1);
@@ -71,8 +68,8 @@ Client::Client(const char* host, const char* port) {
     free(result);
 }
 
-Socket* Client::get_socket(){
-    return &skt;
+Socket& Client::get_socket(){
+    return skt;
 }
 
 Client::Client(Client&& other) { this->skt = std::move(other.skt); }
