@@ -1,10 +1,9 @@
-#include "client_command_number.h"
-
 #include <arpa/inet.h>
-
 #include <cstring>
 
+#include "client_command_number.h"
 #include "client_config.h"
+#include "common_config.h"
 
 std::vector<uint8_t> CommandNumber::get_serialization() {
     std::vector<uint8_t> buffer;

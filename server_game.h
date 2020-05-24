@@ -4,16 +4,28 @@
 #include <vector>
 #include <atomic>
 #include <mutex>
+#include <cstdint>
+
 #include "server_generic.h"
 #include "server_player_handler.h"
+#include "server_statistics.h"
+#include "server_parser.h"
 
 class GameServer {
    private:
-    std::mutex m;
     Server server;
     std::atomic_bool accepting_connections;
+    NumberParser parser;
+
+    Statistics stats;
     std::vector<PlayerHandler*> players;
 
+    /* Carrusel de numeros utilizados para que los clientes adivinen*/
+    std::vector<uint16_t> numbers;
+
+    /* Indice utilizado para el carrusel de numeros. */
+    size_t i_number;
+    
     /* Utilizada por la clase en el hilo aceptador. */
     void _accept_connections();
 

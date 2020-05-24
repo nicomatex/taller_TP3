@@ -17,7 +17,7 @@ bool NumberParser::_is_number(const std::string &s) {
     return true;
 }
 
-bool NumberParser::_has_repeated_digits(const std::string &s){
+bool NumberParser::has_repeated_digits(const std::string &s){
     int digits[256] = {0};
     for(size_t i = 0;i<s.size();i++){
         if(digits[(int)s[i]] > 0){
@@ -28,7 +28,7 @@ bool NumberParser::_has_repeated_digits(const std::string &s){
     return false;
 }
 
-bool NumberParser::_is_within_range(uint16_t number){
+bool NumberParser::is_within_range(uint16_t number){
     return number <= NUMBER_MAX && number >= NUMBER_MIN;
 }
 
@@ -46,11 +46,11 @@ std::vector<uint16_t> NumberParser::parse_numbers(){
         if(!_is_number(buffer)){
             throw std::invalid_argument(MSG_ERR_NOTANUMBER);
         }
-        if(_has_repeated_digits(buffer)){
+        if(has_repeated_digits(buffer)){
             throw std::invalid_argument(MSG_ERR_REPEATED);
         }
         uint16_t number = (uint16_t) std::stoi(buffer);
-        if(!_is_within_range(number)){
+        if(!is_within_range(number)){
             throw std::invalid_argument(MSG_ERR_RANGE);
         }
         numbers.push_back(number);

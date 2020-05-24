@@ -15,10 +15,6 @@
 /* Textos de la interfaz */
 #define INVALID_CMD "Error: comando inválido. Escriba AYUDA para obtener ayuda"
 
-/* Caracteres utilizados en la serializacion*/
-#define SERIAL_CHAR_HELP 'h'
-#define SERIAL_CHAR_SURRENDER 's'
-#define SERIAL_CHAR_NUMBER 'n'
 
 /* Tamanio y posicion donde se ubica el numero en la serializacion del comando
  * numero*/
