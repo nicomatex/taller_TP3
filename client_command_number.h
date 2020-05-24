@@ -1,14 +1,17 @@
 #ifndef __COMMAND_NUMBER_H
 #define __COMMAND_NUMBER_H
 
+/* ------ Includes ---------*/
+#include <vector>
 #include "client_command.h"
 
+/* ------ Interfaz ---------*/
 class CommandNumber : public Command {
    private:
     uint16_t number;
 
    public:
-    CommandNumber(uint16_t number);
+    explicit CommandNumber(uint16_t number);
     ~CommandNumber();
 
     /* Devuelve la serializacion correspondiente al comando. */

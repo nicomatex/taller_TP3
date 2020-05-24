@@ -3,7 +3,7 @@
 
 #include "client_config.h"
 #include "client_game.h"
-#include "common_error.h"
+#include "common_network_error.h"
 
 int main(int argc, char* argv[]) {
     if (argc != CLIENT_ARG_QTY) {
@@ -12,9 +12,9 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-        Game game(argv[1], argv[2]);
+        Game game(argv[ARG_POS_HOST], argv[ARG_POS_PORT]);
         game.run();
-    } catch (Error& e) {
+    } catch (NetworkError& e) {
         std::cerr << e.what() << std::endl;
     } catch (...) {
         std::cerr << MSG_ERR_UNKNOWN << std::endl;

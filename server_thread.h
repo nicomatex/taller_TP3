@@ -1,10 +1,10 @@
 #ifndef __THREAD_H
 #define __THREAD_H
 
-/* Includes */
+/* ------ Includes ---------*/
 #include <thread>
 
-/* Interfaz */
+/* ------ Interfaz ---------*/
 class Thread {
    private:
     std::thread thread;

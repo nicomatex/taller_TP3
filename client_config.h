@@ -15,7 +15,6 @@
 /* Textos de la interfaz */
 #define INVALID_CMD "Error: comando inválido. Escriba AYUDA para obtener ayuda"
 
-
 /* Tamanio y posicion donde se ubica el numero en la serializacion del comando
  * numero*/
 #define CMD_NUMBER_SIZE 3
@@ -23,6 +22,9 @@
 
 /* Errores */
 #define MSG_ERR_UNKNOWN "Ocurrio un error inesperado."
-#define MSG_ERR_CLOSED "El servidor cerro la conexion."
 #define MSG_ERR_PARAMS "Error: argumentos invalidos."
+
+/* Argumentos */
+#define ARG_POS_HOST 1
+#define ARG_POS_PORT 2
 #endif

@@ -1,11 +1,12 @@
-#include "server_player_handler.h"
-
 #include <cstring>
-#include <iostream>  //debug
+#include <utility>
+#include <vector>
+#include <string>
 
+#include "server_player_handler.h"
 #include "arpa/inet.h"
 #include "common_config.h"
-#include "common_error.h"
+#include "common_network_error.h"
 #include "server_config.h"
 
 PlayerHandler::PlayerHandler(Socket peer, Statistics* stats,
@@ -17,6 +18,8 @@ PlayerHandler::PlayerHandler(Socket peer, Statistics* stats,
       guess_number(guess_number),
       tries_left(TRIES_MAX),
       player_won(false) {}
+
+bool PlayerHandler::dead() { return is_dead; }
 
 void PlayerHandler::_send_string(const std::string str) {
     uint16_t length = (uint16_t)str.length();
@@ -33,7 +36,7 @@ void PlayerHandler::_send_string(const std::string str) {
 uint8_t PlayerHandler::_receive_command() {
     std::vector<uint8_t> in_buffer = std::move(peer.recieve_message(1));
     if (in_buffer.size() == 0) {
-        throw Error(MSG_ERR_CLOSED);
+        throw NetworkError(MSG_ERR_CLOSED);
     }
     uint8_t command = in_buffer[0];
     return command;
@@ -42,7 +45,7 @@ uint8_t PlayerHandler::_receive_command() {
 uint16_t PlayerHandler::_receive_int() {
     std::vector<uint8_t> in_buffer = std::move(peer.recieve_message(2));
     if (in_buffer.size() == 0) {
-        throw Error(MSG_ERR_CLOSED);
+        throw NetworkError(MSG_ERR_CLOSED);
     }
     uint16_t number = 0;
     memcpy(&number, &in_buffer[0], sizeof(uint16_t));
@@ -66,35 +69,29 @@ std::string PlayerHandler::_get_hints(uint16_t number) {
     }
 
     std::string hints = "";
-    
-    if(n_right > 0){
-        hints += std::to_string(n_right) + " " + KEYWORD_RIGHT;
+
+    if (n_right > 0) {
+        hints += std::to_string(n_right) + " " + MSG_RIGHT;
     }
-    if(n_regular > 0){
-        if(n_right > 0) hints += ", ";
-        hints += std::to_string(n_regular) + " " + KEYWORD_REGULAR;
+    if (n_regular > 0) {
+        if (n_right > 0) hints += ", ";
+        hints += std::to_string(n_regular) + " " + MSG_REGULAR;
     }
-    if(n_right == 0 && n_regular == 0){
-        hints += std::to_string(number_string.size()) + " " + KEYWORD_WRONG;
+    if (n_right == 0 && n_regular == 0) {
+        hints += std::to_string(number_string.size()) + " " + MSG_WRONG;
     }
     return hints;
 }
 
-void PlayerHandler::_handle_help() {
-    std::cout << "[DEBUG] El cliente pidio ayuda" << std::endl;
-    _send_string(MSG_HELP);
-}
+void PlayerHandler::_handle_help() { _send_string(MSG_HELP); }
 
 void PlayerHandler::_handle_surrender() {
-    std::cout << "[DEBUG] El cliente se rindio" << std::endl;
     _send_string(MSG_LOSE);
     stop();
 }
 
 void PlayerHandler::_handle_number() {
     uint16_t number = _receive_int();
-    std::cout << "[DEBUG] Recibido: " << std::to_string((int)number)
-              << std::endl;
 
     /* Chequeo de validez del numero */
     if (!parser->is_within_range(number) ||
@@ -116,17 +113,14 @@ void PlayerHandler::_handle_number() {
     }
 
     tries_left--;
-    if(tries_left == 0){
+    if (tries_left == 0) {
         _send_string(MSG_LOSE);
-    }else{
+    } else {
         _send_string(_get_hints(number));
     }
 }
 
 void PlayerHandler::run() {
-    std::cout << "[DEBUG] Nuevo cliente conectado, jugando con el numero "
-              << std::to_string((int)guess_number) << std::endl;
-
     while (!player_won && tries_left > 0 && !is_dead) {
         try {
             uint8_t command = _receive_command();
@@ -144,14 +138,18 @@ void PlayerHandler::run() {
                 default:
                     continue;
             }
-        } catch (Error& e) {
+        } catch (NetworkError& e) {
             break;
         }
     }
     if (!is_dead) {
         stop();
     }
-    std::cout << "[DEBUG] Conexion con un cliente cerrada." << std::endl;
+    if (player_won) {
+        stats->add_winner();
+    } else {
+        stats->add_loser();
+    }
 }
 
 void PlayerHandler::stop() {

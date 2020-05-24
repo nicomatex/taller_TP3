@@ -1,35 +1,38 @@
 #ifndef __SOCKET_H
 #define __SOCKET_H
 
-#include <vector>
+/* ------ Includes ---------*/
 #include <cstdint>
+#include <vector>
 
-class Socket{
-    protected:
-        int skt;
-    public:
-        Socket();
-        ~Socket();
+/* ------ Interfaz ---------*/
+class Socket {
+   protected:
+    int skt;
 
-        /* Envia un mensaje a traves del socket. Para el tamanio del mensaje
-        se utiliza el size() del vector.*/
-        size_t send_message(const std::vector<uint8_t> &message);
+   public:
+    Socket();
+    ~Socket();
 
-        /* Recibe un mensaje de tamanio msgsize.*/
-        std::vector<uint8_t> recieve_message(size_t msgsize);
+    /* Envia un mensaje a traves del socket. Para el tamanio del mensaje
+    se utiliza el size() del vector.*/
+    size_t send_message(const std::vector<uint8_t>& message);
 
-        /* Setea el File Descriptor asociado al socket.*/
-        void set_socketfd(int socketfd);
+    /* Recibe un mensaje de tamanio msgsize.*/
+    std::vector<uint8_t> recieve_message(size_t msgsize);
 
-        /* Cierra el socket. */
-        void close_connection();
-        
-        /* Anulado el constructor por copia. */
-        Socket(const Socket &other) = delete;
+    /* Setea el File Descriptor asociado al socket.*/
+    void set_socketfd(int socketfd);
 
-        /* Constructor por movimiento. */
-        Socket(Socket&& other);
-        Socket& operator=(Socket&& other);
+    /* Cierra el socket. */
+    void close_connection();
+
+    /* Anulado el constructor por copia. */
+    Socket(const Socket& other) = delete;
+
+    /* Constructor por movimiento. */
+    Socket(Socket&& other);
+    Socket& operator=(Socket&& other);
 };
 
 #endif

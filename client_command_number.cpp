@@ -1,5 +1,6 @@
 #include <arpa/inet.h>
 #include <cstring>
+#include <vector>
 
 #include "client_command_number.h"
 #include "client_config.h"

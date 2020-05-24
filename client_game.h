@@ -1,31 +1,35 @@
 #ifndef __GAME_H
 #define __GAME_H
 
+/* ------ Includes ---------*/
 #include <string>
-#include "client_generic.h"
 #include "client_command.h"
+#include "client_generic.h"
 #include "client_parser.h"
+#include "common_protocol.h"
 
-class Game{
-    private:
-        Client client;
-        ClientParser parser;
-        
-    public:
-        /* Recibe una respuesta del servidor. */
-        std::string receive_response();
+/* ------ Interfaz ---------*/
+class Game {
+   private:
+    Client client;
+    ClientParser parser;
+    Protocol protocol;
 
-        /* Envia un comando al servidor. */
-        void send_command(Command* command);
+   public:
+    /* Recibe una respuesta del servidor. */
+    std::string receive_response();
 
-        /* Inicia el parseo de comandos y comunicacion 
-        con el servidor.*/
-        void run();
+    /* Envia un comando al servidor. */
+    void send_command(Command* command);
 
-        /* Recibe el host y puerto del servidor e intenta
-        conectarse.*/
-        Game(const char* host,const char* port);
-        ~Game();
+    /* Inicia el parseo de comandos y comunicacion
+    con el servidor.*/
+    void run();
+
+    /* Recibe el host y puerto del servidor e intenta
+    conectarse.*/
+    Game(const char* host, const char* port);
+    ~Game();
 };
 
 #endif

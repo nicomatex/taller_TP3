@@ -1,25 +1,28 @@
 #ifndef __STATISTICS_H
 #define __STATISTICS_H
 
+/* ------ Includes ---------*/
 #include <mutex>
 
-class Statistics{
-    private:
-        std::mutex m;
-        unsigned int winners;
-        unsigned int losers;
-    public:
-        Statistics();
-        ~Statistics();
+/* ------ Interfaz ---------*/
+class Statistics {
+   private:
+    std::mutex m;
+    unsigned int winners;
+    unsigned int losers;
 
-        /* Agrega un ganador a las estadisticas */
-        void add_winner();
+   public:
+    Statistics();
+    ~Statistics();
 
-        /* Agrega un perdedor a las estadisticas */
-        void add_loser();
-        
-        unsigned int get_winners();
-        unsigned int get_losers();
+    /* Agrega un ganador a las estadisticas */
+    void add_winner();
+
+    /* Agrega un perdedor a las estadisticas */
+    void add_loser();
+
+    void print_stats();
 };
 
 #endif
+

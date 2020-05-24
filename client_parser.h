@@ -6,9 +6,11 @@
 #include <string>
 #include "client_command.h"
 
+/* ------ Interfaz ---------*/
 class ClientParser {
    private:
-    bool _is_number(const std::string &s);
+    bool _is_number(const std::string& s);
+
    public:
     ClientParser();
     ~ClientParser();

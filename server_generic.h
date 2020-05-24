@@ -1,5 +1,10 @@
+#ifndef __SERVER_GENERIC_H
+#define __SERVER_GENERIC_H
+
+/* ------ Includes ---------*/
 #include "server_acceptor_socket.h"
 
+/* ------ Interfaz ---------*/
 class Server {
    private:
     AcceptorSocket acceptor_skt;
@@ -17,7 +22,7 @@ class Server {
    public:
     /* Recibe el puerto. Abre el servidor para escucha en el momento
     de la construccion. */
-    Server(const char* port);
+    explicit Server(const char* port);
     ~Server();
 
     /* Cierra el socket aceptador y deja de escuchar nuevas
@@ -27,5 +32,5 @@ class Server {
     /* Acepta una conexion y devuelve un objeto Socket representando
     al peer aceptado.*/
     Socket accept_connection();
-
 };
+#endif

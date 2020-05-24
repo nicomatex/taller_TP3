@@ -6,6 +6,7 @@
 #define ERROR_MSG_CONNECTION "Error conectandose al servidor."
 #define ERROR_MSG_SEND "Error enviando el mensaje."
 #define ERROR_MSG_RECEIVE "Error recibiendo el mensaje."
+#define MSG_ERR_CLOSED "Conexion cerrada inesperadamente."
 
 /* Caracteres utilizados en la serializacion*/
 #define SERIAL_CHAR_HELP 'h'

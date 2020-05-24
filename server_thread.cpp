@@ -1,7 +1,8 @@
 /* Includes */
-#include "server_thread.h"
-#include <utility>
 #include <thread>
+#include <utility>
+
+#include "server_thread.h"
 
 /*Implementacion de metodos*/
 Thread::Thread() {}

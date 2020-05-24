@@ -1,13 +1,16 @@
-#include "client_game.h"
 
 #include <arpa/inet.h>
-
 #include <cstring>
+#include <utility>
+#include <vector>
 
+#include "client_game.h"
 #include "client_config.h"
-#include "common_error.h"
+#include "common_network_error.h"
+#include "common_config.h"
 
-Game::Game(const char* host, const char* port) : client(host, port) {}
+Game::Game(const char* host, const char* port)
+    : client(host, port), protocol(client.get_socket()) {}
 
 void Game::send_command(Command* command) {
     client.send_message(command->get_serialization());
@@ -50,7 +53,7 @@ void Game::run() {
             } else {
                 std::cout << response << std::endl;
             }
-        } catch (Error& e) {
+        } catch (NetworkError& e) {
             std::cerr << e.what() << std::endl;
             continue_running = false;
         } catch (...) {

@@ -9,20 +9,26 @@
 #define MSG_ERR_LISTEN "Error abriendo el servidor en el puerto indicado."
 #define MSG_ERR_PEER "Error: No se pudo aceptar la conexion entrante."
 #define MSG_ERR_ARGS "Error: argumentos invalidos."
-#define MSG_ERR_CLOSED "El cliente cerro la conexion inesperadamente."
+
+/* Interfaz del servidor */
+#define QUIT_STR "q"
 
 /* Respuestas al cliente */
-#define MSG_HELP                                                                 \
-    "Comandos válidos:​\n\tAYUDA: despliega la lista de comandos "            \
+#define MSG_HELP                                                              \
+    "Comandos válidos:\n\tAYUDA: despliega la lista de comandos "             \
     "válidos\n\tRENDIRSE: pierde el juego automáticamente\n\tXXX: Número de " \
     "3 cifras a ser enviado al servidor para adivinar el número secreto"
 
 #define MSG_LOSE "Perdiste"
 #define MSG_WIN "Ganaste"
 #define MSG_WRONG_NUMBER "Número inválido. Debe ser de 3 cifras no repetidas"
-#define KEYWORD_RIGHT "bien"
-#define KEYWORD_REGULAR "regular"
-#define KEYWORD_WRONG "mal"
+
+#define MSG_RIGHT "bien"
+#define MSG_REGULAR "regular"
+#define MSG_WRONG "mal"
+#define MSG_STATS "Estadísticas"
+#define MSG_WINNERS "Ganadores"
+#define MSG_LOSERS "Perdedores"
 
 /* Parametros del juego*/
 #define NUMBER_MIN 100

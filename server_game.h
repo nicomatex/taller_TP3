@@ -1,16 +1,17 @@
 #ifndef __GAME_SERVER_H
 #define __GAME_SERVER_H
 
-#include <vector>
+/* ------ Includes ---------*/
 #include <atomic>
-#include <mutex>
 #include <cstdint>
-
+#include <mutex>
+#include <vector>
 #include "server_generic.h"
+#include "server_parser.h"
 #include "server_player_handler.h"
 #include "server_statistics.h"
-#include "server_parser.h"
 
+/* ------ Interfaz ---------*/
 class GameServer {
    private:
     Server server;
@@ -25,7 +26,7 @@ class GameServer {
 
     /* Indice utilizado para el carrusel de numeros. */
     size_t i_number;
-    
+
     /* Utilizada por la clase en el hilo aceptador. */
     void _accept_connections();
 
@@ -34,11 +35,11 @@ class GameServer {
 
     /* Quita los clientes desconectados/muertos de la lista. Es thread-safe */
     void _remove_dead();
-    
+
    public:
     /* Recibe en su constructor el puerto y la ruta
     al archivo con numeros.*/
-    GameServer(const char* port,const char* numbers_file);
+    GameServer(const char* port, const char* numbers_file);
     ~GameServer();
 
     /* Inicia la ejecucion del servidor. */

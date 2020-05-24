@@ -1,25 +1,26 @@
+#include <iostream>
+
 #include "server_statistics.h"
+#include "server_config.h"
 
-Statistics::Statistics():winners(0),losers(0){}
+Statistics::Statistics() : winners(0), losers(0) {}
 
-Statistics::~Statistics(){}
+Statistics::~Statistics() {}
 
-void Statistics::add_loser(){
+void Statistics::add_loser() {
     std::unique_lock<std::mutex> l(m);
     losers += 1;
 }
 
-void Statistics::add_winner(){
+void Statistics::add_winner() {
     std::unique_lock<std::mutex> l(m);
     winners += 1;
 }
 
-unsigned int Statistics::get_losers(){
+void Statistics::print_stats() {
     std::unique_lock<std::mutex> l(m);
-    return losers;
-}
-
-unsigned int Statistics::get_winners(){
-    std::unique_lock<std::mutex> l(m);
-    return winners;
+    std::cout << MSG_STATS << ":\n\t";
+    std::cout << MSG_WINNERS << ":  " << winners;
+    std::cout << "\n\t";
+    std::cout << MSG_LOSERS << ": " << losers << "\n";
 }
