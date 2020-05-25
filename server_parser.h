@@ -28,7 +28,6 @@ class NumberParser {
     explicit NumberParser(const char* filename);
 
     ~NumberParser();
-    
 };
 
 #endif
