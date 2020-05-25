@@ -48,10 +48,7 @@ class Socket {
 
     /* Recibe un mensaje de tamanio msgsize.*/
     std::vector<uint8_t> recieve_message(size_t msgsize);
-
-    /* Setea el File Descriptor asociado al socket.*/
-    void set_socketfd(int socketfd);
-
+    
     /* Cierra el socket. */
     void close_connection();
 

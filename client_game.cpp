@@ -27,6 +27,7 @@ void Game::run() {
             /* Comprobacion de fin de partida */
             if (response == RESP_LOSE || response == RESP_WIN) {
                 continue_running = false;
+                protocol.close_connection();
             }
 
             /* Comprobacion de desconexion */
