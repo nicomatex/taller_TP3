@@ -56,7 +56,7 @@ void Socket::_get_dns_info(const char* host, const char* port,
     hints.ai_flags = is_server ? AI_PASSIVE : 0;
 
     if (getaddrinfo(host, port, &hints, result) != 0) {
-        throw NetworkError(ERROR_MSG_DNS);
+        throw NetworkError(MSG_ERR_DNS);
     }
 }
 
@@ -80,7 +80,7 @@ void Socket::_connect(struct addrinfo* result) {
         }
     }
     if (!is_connected) {
-        throw NetworkError(ERROR_MSG_CONNECTION);
+        throw NetworkError(MSG_ERR_CONNECTION);
     }
     skt = tmp_skt;
 }
@@ -136,7 +136,7 @@ size_t Socket::send_message(const std::vector<uint8_t>& message) {
     if (valid_socket) {
         return total_sent;
     } else {
-        throw NetworkError(ERROR_MSG_SEND);
+        throw NetworkError(MSG_ERR_SEND);
     }
 }
 
@@ -156,7 +156,7 @@ std::vector<uint8_t> Socket::recieve_message(size_t msgsize) {
         just_received =
             recv(skt, &buffer[total_received], msgsize - total_received, 0);
         if (just_received == -1) {
-            throw NetworkError(ERROR_MSG_RECEIVE);
+            throw NetworkError(MSG_ERR_RECEIVE);
         } else if (just_received == 0) {
             remote_socket_closed = true;
         }

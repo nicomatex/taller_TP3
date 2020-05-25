@@ -14,7 +14,7 @@ class Protocol {
     Socket socket;
 
    public:
-    Protocol(Socket socket);
+    explicit Protocol(Socket socket);
     ~Protocol();
 
     /* Recibe y devuelve una cadena.*/

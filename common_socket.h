@@ -30,11 +30,11 @@ class Socket {
 
     /* Constructor utilizado para crear un socket acceptor (servidor). Recibe
     el puerto donde debe escuchar las conexiones.*/
-    Socket(const char* port);
+    explicit Socket(const char* port);
 
     /* Constructor utilizado para crear un socket a partir de un
     file descriptor ya inicializado.*/
-    Socket(int skt);
+    explicit Socket(int skt);
 
     /* Acepta una nueva conexion y devuelve el socket que representa
     la conexion con el nuevo cliente.*/
