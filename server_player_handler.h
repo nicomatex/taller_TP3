@@ -15,7 +15,6 @@
 class PlayerHandler : public Thread {
    private:
     std::mutex m;
-    Socket peer;
     Statistics* stats;
     NumberParser* parser;
     Protocol protocol;

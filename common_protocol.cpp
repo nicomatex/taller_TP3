@@ -6,11 +6,11 @@
 #include <arpa/inet.h>
 #include <cstring>
 
-Protocol::Protocol() {}
+Protocol::Protocol(Socket socket): socket(std::move(socket)) {}
 
 Protocol::~Protocol() {}
 
-std::string Protocol::receive_string(Socket &socket) {
+std::string Protocol::receive_string() {
     std::vector<uint8_t> res_size_buffer =
         std::move(socket.recieve_message(sizeof(uint16_t)));
 
@@ -30,7 +30,7 @@ std::string Protocol::receive_string(Socket &socket) {
     return response;
 }
 
-void Protocol::send_string(Socket &socket, const std::string str) {
+void Protocol::send_string(const std::string str) {
     uint16_t length = (uint16_t)str.length();
     length = htons(length);  // Pasaje a big endian
 
@@ -42,7 +42,7 @@ void Protocol::send_string(Socket &socket, const std::string str) {
     socket.send_message(output_buffer);
 }
 
-uint8_t Protocol::receive_char(Socket &socket) {
+uint8_t Protocol::receive_char() {
     std::vector<uint8_t> in_buffer = std::move(socket.recieve_message(1));
     if (in_buffer.size() == 0) {
         throw NetworkError(MSG_ERR_CLOSED);
@@ -51,7 +51,7 @@ uint8_t Protocol::receive_char(Socket &socket) {
     return command;
 }
 
-uint16_t Protocol::receive_int(Socket &socket) {
+uint16_t Protocol::receive_int() {
     std::vector<uint8_t> in_buffer = std::move(socket.recieve_message(2));
     if (in_buffer.size() == 0) {
         throw NetworkError(MSG_ERR_CLOSED);
@@ -60,4 +60,13 @@ uint16_t Protocol::receive_int(Socket &socket) {
     memcpy(&number, &in_buffer[0], sizeof(uint16_t));
     number = ntohs(number);  // Pasaje a little endian
     return number;
+}
+
+
+void Protocol::close_connection(){
+    socket.close_connection();
+}
+
+void Protocol::send_command(Command *command){
+    socket.send_message(command->get_serialization());
 }

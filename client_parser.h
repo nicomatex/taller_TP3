@@ -4,7 +4,7 @@
 /* ------ Includes ------*/
 #include <iostream>
 #include <string>
-#include "client_command.h"
+#include "common_command.h"
 
 /* ------ Interfaz ---------*/
 class ClientParser {

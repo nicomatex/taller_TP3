@@ -9,10 +9,10 @@
 #include "common_config.h"
 
 Game::Game(const char* host, const char* port)
-    : client(host, port) {}
+    : protocol(Socket(host,port)){}
 
 void Game::send_command(Command* command) {
-    client.send_message(command->get_serialization());
+    protocol.send_command(command);
     delete command;
 }
 
@@ -22,7 +22,7 @@ void Game::run() {
     while (continue_running) {
         try {
             send_command(parser());
-            response = std::move(protocol.receive_string(client.get_socket()));
+            response = std::move(protocol.receive_string());
 
             /* Comprobacion de fin de partida */
             if (response == RESP_LOSE || response == RESP_WIN) {

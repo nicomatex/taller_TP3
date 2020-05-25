@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <mutex>
 #include <vector>
-#include "server_generic.h"
 #include "server_parser.h"
 #include "server_player_handler.h"
 #include "server_statistics.h"
@@ -14,7 +13,7 @@
 /* ------ Interfaz ---------*/
 class GameServer {
    private:
-    Server server;
+    Socket acceptor;
     std::atomic_bool accepting_connections;
     NumberParser parser;
 

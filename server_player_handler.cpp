@@ -11,9 +11,9 @@
 
 PlayerHandler::PlayerHandler(Socket peer, Statistics* stats,
                              NumberParser* parser, const uint16_t guess_number)
-    : peer(std::move(peer)),
-      stats(stats),
+    : stats(stats),
       parser(parser),
+      protocol(std::move(peer)),
       is_dead(false),
       guess_number(guess_number),
       tries_left(TRIES_MAX),
@@ -51,47 +51,47 @@ std::string PlayerHandler::_get_hints(uint16_t number) {
     return hints;
 }
 
-void PlayerHandler::_handle_help() { protocol.send_string(peer, MSG_HELP); }
+void PlayerHandler::_handle_help() { protocol.send_string(MSG_HELP); }
 
 void PlayerHandler::_handle_surrender() {
-    protocol.send_string(peer, MSG_LOSE);
+    protocol.send_string(MSG_LOSE);
     stop();
 }
 
 void PlayerHandler::_handle_number() {
-    uint16_t number = protocol.receive_int(peer);
+    uint16_t number = protocol.receive_int();
 
     /* Chequeo de validez del numero */
     if (!parser->is_within_range(number) ||
         parser->has_repeated_digits(std::to_string((int)number))) {
         tries_left--;
         if (tries_left == 0) {
-            protocol.send_string(peer, MSG_LOSE);
+            protocol.send_string(MSG_LOSE);
         } else {
-            protocol.send_string(peer, MSG_WRONG_NUMBER);
+            protocol.send_string(MSG_WRONG_NUMBER);
         }
         return;
     }
 
     /* Chequeo de que haya adivinado el numero. */
     if (number == guess_number) {
-        protocol.send_string(peer, MSG_WIN);
+        protocol.send_string(MSG_WIN);
         player_won = true;
         return;
     }
 
     tries_left--;
     if (tries_left == 0) {
-        protocol.send_string(peer, MSG_LOSE);
+        protocol.send_string(MSG_LOSE);
     } else {
-        protocol.send_string(peer, _get_hints(number));
+        protocol.send_string(_get_hints(number));
     }
 }
 
 void PlayerHandler::run() {
     while (!player_won && tries_left > 0 && !is_dead) {
         try {
-            uint8_t command = protocol.receive_char(peer);
+            uint8_t command = protocol.receive_char();
 
             switch (command) {
                 case SERIAL_CHAR_HELP:
@@ -122,6 +122,6 @@ void PlayerHandler::run() {
 
 void PlayerHandler::stop() {
     std::unique_lock<std::mutex> l(m);
-    peer.close_connection();
+    protocol.close_connection();
     is_dead = true;
 }

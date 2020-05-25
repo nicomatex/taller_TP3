@@ -6,8 +6,6 @@
 #define MSG_ERR_NOTANUMBER "Linea no numerica encontrada."
 #define MSG_ERR_REPEATED "Error: formato de los números inválidos"
 #define MSG_ERR_RANGE "Error: archivo con números fuera de rango"
-#define MSG_ERR_LISTEN "Error abriendo el servidor en el puerto indicado."
-#define MSG_ERR_PEER "Error: No se pudo aceptar la conexion entrante."
 #define MSG_ERR_ARGS "Error: argumentos invalidos."
 
 /* Interfaz del servidor */
@@ -39,8 +37,5 @@
 #define ARGS_QTY 3
 #define ARG_POS_PORT 1
 #define ARG_POS_NUMBERFILE 2
-
-/* Parametros del servidor */
-#define CLIENT_QUEUE_SIZE 20
 
 #endif

@@ -7,10 +7,16 @@
 #define ERROR_MSG_SEND "Error enviando el mensaje."
 #define ERROR_MSG_RECEIVE "Error recibiendo el mensaje."
 #define MSG_ERR_CLOSED "Conexion cerrada inesperadamente."
+#define MSG_ERR_LISTEN "Error abriendo el servidor en el puerto indicado."
+#define MSG_ERR_PEER "Error: No se pudo aceptar la conexion entrante."
+#define MSG_ERR_WRONGSOCKET "Error: Este tipo de socket no acepta esta operacion."
 
 /* Caracteres utilizados en la serializacion*/
 #define SERIAL_CHAR_HELP 'h'
 #define SERIAL_CHAR_SURRENDER 's'
 #define SERIAL_CHAR_NUMBER 'n'
+
+/* Parametros del servidor */
+#define CLIENT_QUEUE_SIZE 20
 
 #endif

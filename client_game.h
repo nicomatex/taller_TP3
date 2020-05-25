@@ -3,15 +3,13 @@
 
 /* ------ Includes ---------*/
 #include <string>
-#include "client_command.h"
-#include "client_generic.h"
+#include "common_command.h"
 #include "client_parser.h"
 #include "common_protocol.h"
 
 /* ------ Interfaz ---------*/
 class Game {
    private:
-    Client client;
     ClientParser parser;
     Protocol protocol;
 

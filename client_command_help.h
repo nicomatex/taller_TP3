@@ -3,7 +3,7 @@
 
 /* ------ Includes ---------*/
 #include <vector>
-#include "client_command.h"
+#include "common_command.h"
 
 /* ------ Interfaz ---------*/
 class CommandHelp : public Command {

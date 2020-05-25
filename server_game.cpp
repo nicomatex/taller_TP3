@@ -8,7 +8,7 @@
 #include "server_config.h"
 
 GameServer::GameServer(const char* port, const char* numbers_file)
-    : server(port),
+    : acceptor(port),
       accepting_connections(true),
       parser(numbers_file),
       i_number(0) {}
@@ -34,7 +34,7 @@ void GameServer::_remove_dead() {
 void GameServer::_accept_connections() {
     while (accepting_connections) {
         try {
-            Socket peer = std::move(server.accept_connection());
+            Socket peer = std::move(acceptor.accept_connection());
             PlayerHandler* player = new PlayerHandler(
                 std::move(peer), &stats, &parser, numbers[i_number]);
             i_number = (i_number + 1) % numbers.size();
@@ -64,7 +64,7 @@ void GameServer::run() {
     std::string buffer;
     while (std::getline(std::cin, buffer)) {
         if (buffer == QUIT_STR) {
-            server.stop_listening();
+            acceptor.close_connection();
             break;
         }
     }

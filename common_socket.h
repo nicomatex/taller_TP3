@@ -9,9 +9,37 @@
 class Socket {
    protected:
     int skt;
+    bool is_server;
+
+    /* Obtiene la informacion DNS necesaria para establecer la conexion
+    y la almacena en result.*/
+    void _get_dns_info(const char* host, const char* port,
+                       struct addrinfo** result,bool is_server);
+
+    /* Establece la conexion al primer resultado valido dentro de la lista
+    de resultados.*/
+    void _connect(struct addrinfo* result);
+
+    /* Abre el socket a la escucha de nuevas conexiones.*/
+    void _start_listening(struct addrinfo* result);
 
    public:
-    Socket();
+    /* Constructor utilizado para crear un socket cliente. Recibe
+    un host y un puerto.*/
+    Socket(const char* host, const char* port);
+
+    /* Constructor utilizado para crear un socket acceptor (servidor). Recibe
+    el puerto donde debe escuchar las conexiones.*/
+    Socket(const char* port);
+
+    /* Constructor utilizado para crear un socket a partir de un
+    file descriptor ya inicializado.*/
+    Socket(int skt);
+
+    /* Acepta una nueva conexion y devuelve el socket que representa
+    la conexion con el nuevo cliente.*/
+    Socket accept_connection();
+
     ~Socket();
 
     /* Envia un mensaje a traves del socket. Para el tamanio del mensaje
