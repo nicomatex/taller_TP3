@@ -1,13 +1,12 @@
-#include "common_socket.h"
 
+#include <cstring>
+#include <utility>
 #include <netdb.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <cstring>
-#include <utility>
-
+#include "common_socket.h"
 #include "common_config.h"
 #include "common_network_error.h"
 
