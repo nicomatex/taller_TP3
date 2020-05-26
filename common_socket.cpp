@@ -1,11 +1,13 @@
+#include "common_socket.h"
+
 #include <netdb.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+
 #include <cstring>
 #include <utility>
 
-#include "common_socket.h"
 #include "common_config.h"
 #include "common_network_error.h"
 
@@ -123,8 +125,8 @@ size_t Socket::send_message(const std::vector<uint8_t>& message) {
     bool valid_socket = true;
 
     while (total_sent < message.size() && valid_socket) {
-        just_sent =
-            send(skt, &message[total_sent], message.size() - total_sent, MSG_NOSIGNAL);
+        just_sent = send(skt, &message[total_sent], message.size() - total_sent,
+                         MSG_NOSIGNAL);
         if (just_sent == 0) return 0;
 
         if (just_sent == -1) {
