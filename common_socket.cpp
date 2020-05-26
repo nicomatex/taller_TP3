@@ -124,7 +124,7 @@ size_t Socket::send_message(const std::vector<uint8_t>& message) {
 
     while (total_sent < message.size() && valid_socket) {
         just_sent =
-            send(skt, &message[0], message.size() - total_sent, MSG_NOSIGNAL);
+            send(skt, &message[total_sent], message.size() - total_sent, MSG_NOSIGNAL);
         if (just_sent == 0) return 0;
 
         if (just_sent == -1) {

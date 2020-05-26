@@ -1,12 +1,14 @@
 #include "common_protocol.h"
-#include "common_config.h"
 
+#include <arpa/inet.h>
+
+#include <cstring>
 #include <utility>
 #include <vector>
-#include <arpa/inet.h>
-#include <cstring>
 
-Protocol::Protocol(Socket socket): socket(std::move(socket)) {}
+#include "common_config.h"
+
+Protocol::Protocol(Socket socket) : socket(std::move(socket)) {}
 
 Protocol::~Protocol() {}
 
@@ -21,8 +23,13 @@ std::string Protocol::receive_string() {
 
     std::vector<uint8_t> res_buffer =
         std::move(socket.recieve_message((size_t)res_size));
-    std::string response;
 
+    if (res_buffer.size() == 0) {
+        throw NetworkError(MSG_ERR_CLOSED);
+    }
+
+    std::string response;
+    
     for (size_t i = 0; i < res_buffer.size(); i++) {
         response.push_back((char)res_buffer[i]);
     }
@@ -52,7 +59,9 @@ uint8_t Protocol::receive_char() {
 }
 
 uint16_t Protocol::receive_int() {
-    std::vector<uint8_t> in_buffer = std::move(socket.recieve_message(2));
+    std::vector<uint8_t> in_buffer =
+        std::move(socket.recieve_message(sizeof(uint16_t)));
+
     if (in_buffer.size() == 0) {
         throw NetworkError(MSG_ERR_CLOSED);
     }
@@ -62,11 +71,8 @@ uint16_t Protocol::receive_int() {
     return number;
 }
 
+void Protocol::close_connection() { socket.close_connection(); }
 
-void Protocol::close_connection(){
-    socket.close_connection();
-}
-
-void Protocol::send_command(Command *command){
+void Protocol::send_command(Command *command) {
     socket.send_message(command->get_serialization());
 }
