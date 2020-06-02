@@ -14,10 +14,10 @@ Protocol::~Protocol() {}
 
 std::string Protocol::receive_string() {
     std::vector<uint8_t> res_size_buffer =
-        std::move(socket.recieve_message(sizeof(uint16_t)));
+        std::move(socket.recieve_message(sizeof(uint32_t)));
 
-    uint16_t res_size = 0;
-    memcpy(&res_size, &res_size_buffer[0], sizeof(uint16_t));
+    uint32_t res_size = 0;
+    *(&res_size) = *((uint32_t*)(&res_size_buffer[0]));
 
     res_size = ntohs(res_size);
 
@@ -28,23 +28,19 @@ std::string Protocol::receive_string() {
         throw NetworkError(MSG_ERR_CLOSED);
     }
 
-    std::string response;
-    
-    for (size_t i = 0; i < res_buffer.size(); i++) {
-        response.push_back((char)res_buffer[i]);
-    }
+    std::string response(res_buffer.begin(),res_buffer.end());
 
     return response;
 }
 
 void Protocol::send_string(const std::string str) {
-    uint16_t length = (uint16_t)str.length();
+    uint32_t length = (uint32_t)str.length();
     length = htons(length);  // Pasaje a big endian
 
     std::vector<uint8_t> output_buffer;
-    output_buffer.resize(sizeof(uint16_t) + str.length());
-    memcpy(&output_buffer[0], &length, sizeof(uint16_t));
-    memcpy(&output_buffer[sizeof(uint16_t)], &str[0], str.length());
+    output_buffer.resize(sizeof(uint32_t) + str.length());
+    memcpy(&output_buffer[0], &length, sizeof(uint32_t));
+    memcpy(&output_buffer[sizeof(uint32_t)], &str[0], str.length());
 
     socket.send_message(output_buffer);
 }
@@ -66,7 +62,8 @@ uint16_t Protocol::receive_int() {
         throw NetworkError(MSG_ERR_CLOSED);
     }
     uint16_t number = 0;
-    memcpy(&number, &in_buffer[0], sizeof(uint16_t));
+    *(&number) = *((uint16_t*)(&in_buffer[0]));
+
     number = ntohs(number);  // Pasaje a little endian
     return number;
 }

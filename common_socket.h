@@ -7,9 +7,9 @@
 
 /* ------ Interfaz ---------*/
 class Socket {
-   protected:
+   private:
     int skt;
-    bool is_server;
+    bool is_passive;
 
     /* Obtiene la informacion DNS necesaria para establecer la conexion
     y la almacena en result.*/
@@ -23,6 +23,10 @@ class Socket {
     /* Abre el socket a la escucha de nuevas conexiones.*/
     void _start_listening(struct addrinfo* result);
 
+    /* Constructor utilizado para crear un socket a partir de un
+    file descriptor ya inicializado. Usado en el metodo accept.*/
+    explicit Socket(int skt);
+
    public:
     /* Constructor utilizado para crear un socket cliente. Recibe
     un host y un puerto.*/
@@ -31,10 +35,6 @@ class Socket {
     /* Constructor utilizado para crear un socket acceptor (servidor). Recibe
     el puerto donde debe escuchar las conexiones.*/
     explicit Socket(const char* port);
-
-    /* Constructor utilizado para crear un socket a partir de un
-    file descriptor ya inicializado.*/
-    explicit Socket(int skt);
 
     /* Acepta una nueva conexion y devuelve el socket que representa
     la conexion con el nuevo cliente.*/

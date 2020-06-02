@@ -5,11 +5,12 @@
 #include <iostream>
 #include <string>
 #include "common_command.h"
+#include "common_number_parser.h"
 
 /* ------ Interfaz ---------*/
 class ClientParser {
    private:
-    bool _is_number(const std::string& s);
+    NumberParser number_parser;
 
    public:
     ClientParser();

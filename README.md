@@ -21,6 +21,8 @@
 4. **[Servidor](#Server)**
     * 4.1. [Handler de clientes](#ClientHandler)
 
+5. **[Reentrega](#Reentrega)**
+
 
 ---
 ## 1. Sockets <a name="Sockets"></a>
@@ -83,3 +85,21 @@ Quedando el servidor compuesto de la siguiente forma:
 ![Imagen 5](img/server.png?raw=true)
 
 _Imagen 5. Diagrama del servidor_
+
+---
+## 5. Reentrega <a name="Reentrega"></a>
+
+Para la reentrega del presente trabajo, se realizaron una serie de cambios en el código a bien de solucionar los problemas indicados en la corrección correspondiente a la primera entrega, así como también mejorar la legibilidad general del mismo. El cambio mas sustancial que se hizo fue convertir la clase ```NumberParser``` en una clase común tanto al cliente como al servidor, y que es utilizada para verificar la validez de números ingresados por el usuario. En esta versión, el parser del cliente manifiesta una relación de composición con ```NumberParser```, como se ilustra en el siguiente diagrama. 
+
+
+![Imagen 6](img/parser_cliente_reentrega.png?raw=true)
+
+_Imagen 6. Diagrama del parser del cliente_
+
+
+Debido a que se convirtió el metodo ```is_number``` de ```NumberParser``` en un metodo publico, se adjunta a continuación el diagrama de clase del servidor que refleja dicho cambio. 
+
+
+![Imagen 7](img/server_reentrega.png?raw=true)
+
+_Imagen 7. Diagrama del servidor_

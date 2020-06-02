@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <mutex>
 #include <vector>
-#include "server_parser.h"
+#include "common_number_parser.h"
 #include "server_player_handler.h"
 #include "server_statistics.h"
 
@@ -16,7 +16,7 @@ class GameServer {
     Socket acceptor;
     std::atomic_bool accepting_connections;
     NumberParser parser;
-
+    const char* number_file_name;
     Statistics stats;
     std::vector<PlayerHandler*> players;
 

@@ -10,7 +10,7 @@
 GameServer::GameServer(const char* port, const char* numbers_file)
     : acceptor(port),
       accepting_connections(true),
-      parser(numbers_file),
+      number_file_name(numbers_file),
       i_number(0) {}
 
 GameServer::~GameServer() {}
@@ -54,7 +54,7 @@ void GameServer::_accept_connections() {
 
 void GameServer::run() {
     try {
-        numbers = std::move(parser.parse_numbers());
+        numbers = std::move(parser.parse_number_file(number_file_name));
     } catch (std::invalid_argument& e) {
         std::cerr << e.what() << std::endl;
         return;
