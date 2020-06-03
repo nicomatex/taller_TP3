@@ -27,4 +27,7 @@
 /* Argumentos */
 #define ARG_POS_HOST 1
 #define ARG_POS_PORT 2
+
+/* Limites de entrada */
+#define MAX_NUMBER_LENGTH 6
 #endif

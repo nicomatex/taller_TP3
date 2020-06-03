@@ -10,7 +10,7 @@
 #include "common_config.h"
 #include "common_network_error.h"
 
-Socket::Socket(const char* host, const char* port) : is_server(false) {
+Socket::Socket(const char* host, const char* port) : is_passive(false) {
     struct addrinfo* result;
     _get_dns_info(host, port, &result, false);
     try {
@@ -22,23 +22,23 @@ Socket::Socket(const char* host, const char* port) : is_server(false) {
     free(result);
 }
 
-Socket::Socket(const char* port) : is_server(true) {
+Socket::Socket(const char* port) : is_passive(true) {
     struct addrinfo* result;
     _get_dns_info(NULL, port, &result, true);
 
     try {
         _start_listening(result);
     } catch (NetworkError& e) {
-        free(result);
+        freeaddrinfo(result);
         throw;
     }
-    free(result);
+    freeaddrinfo(result);
 }
 
-Socket::Socket(int skt) : skt(skt), is_server(false) {}
+Socket::Socket(int skt) : skt(skt), is_passive(false) {}
 
 Socket Socket::accept_connection() {
-    if (!is_server) {
+    if (!is_passive) {
         throw NetworkError(MSG_ERR_WRONGSOCKET);
     }
     int temp_socketfd = accept(this->skt, NULL, NULL);
@@ -116,7 +116,7 @@ void Socket::_start_listening(struct addrinfo* result) {
 }
 
 size_t Socket::send_message(const std::vector<uint8_t>& message) {
-    if (is_server) {
+    if (is_passive) {
         throw NetworkError(MSG_ERR_WRONGSOCKET);
     }
     size_t total_sent = 0;
@@ -142,7 +142,7 @@ size_t Socket::send_message(const std::vector<uint8_t>& message) {
 }
 
 std::vector<uint8_t> Socket::recieve_message(size_t msgsize) {
-    if (is_server) {
+    if (is_passive) {
         throw NetworkError(MSG_ERR_WRONGSOCKET);
     }
     std::vector<uint8_t> buffer(msgsize);
@@ -179,12 +179,12 @@ void Socket::close_connection() {
 
 Socket::Socket(Socket&& other) {
     this->skt = std::move(other.skt);
-    this->is_server = std::move(other.is_server);
+    this->is_passive = std::move(other.is_passive);
 }
 
 Socket& Socket::operator=(Socket&& other) {
     this->skt = std::move(other.skt);
-    this->is_server = std::move(other.is_server);
+    this->is_passive = std::move(other.is_passive);
     return *this;
 }
 
