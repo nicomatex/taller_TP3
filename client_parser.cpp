@@ -1,6 +1,7 @@
+#include "client_parser.h"
+
 #include <iostream>
 
-#include "client_parser.h"
 #include "client_command_help.h"
 #include "client_command_number.h"
 #include "client_command_surrender.h"
@@ -20,9 +21,10 @@ Command* ClientParser::operator()() {
         if (line == CMD_SURRENDER) {
             return new CommandSurrender();
         }
-        if (number_parser.is_number(line) && line.length() < MAX_NUMBER_LENGTH) {
+        if (number_parser.is_number(line) &&
+            line.length() < MAX_NUMBER_LENGTH) {
             int number = std::stoi(line);
-            if(number < UINT16_MAX){
+            if (number < UINT16_MAX) {
                 return new CommandNumber((uint16_t)number);
             }
         }
