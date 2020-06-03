@@ -8,7 +8,6 @@
 
 /* ------ Interfaz ---------*/
 class NumberParser {
-
    public:
     /* Devuelve true si la string pasada por parametro
     representa un numero, y false en caso contrario.*/
