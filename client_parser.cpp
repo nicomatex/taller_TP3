@@ -20,8 +20,11 @@ Command* ClientParser::operator()() {
         if (line == CMD_SURRENDER) {
             return new CommandSurrender();
         }
-        if (number_parser.is_number(line)) {
-            return new CommandNumber((uint16_t)std::stoi(line));
+        if (number_parser.is_number(line) && line.length() < MAX_NUMBER_LENGTH) {
+            int number = std::stoi(line);
+            if(number < UINT16_MAX){
+                return new CommandNumber((uint16_t)number);
+            }
         }
         std::cout << INVALID_CMD << std::endl;
     }
